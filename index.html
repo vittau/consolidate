@@ -1,0 +1,453 @@
+---
+layout: null
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>consolidate | Automated AI-Powered Bullet Journal</title>
+    <meta name="description" content="Your digital memory organized by AI. Write freely, consolidate automatically with Claude Code.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b;
+            --surface: rgba(255, 255, 255, 0.03);
+            --surface-hover: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ededed;
+            --text-muted: #a1a1aa;
+            --accent-1: #6366f1; /* Indigo */
+            --accent-2: #c084fc; /* Purple */
+            --glow: rgba(99, 102, 241, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Dynamic Background Glow */
+        .ambient-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(120px);
+            opacity: 0.5;
+            animation: float 20s ease-in-out infinite alternate;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: 20%;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, var(--accent-1) 0%, transparent 70%);
+        }
+
+        .blob-2 {
+            bottom: -20%;
+            right: 10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, var(--accent-2) 0%, transparent 70%);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10%, 15%) scale(1.1); }
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-up {
+            opacity: 0;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            color: var(--accent-2);
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 8rem 0 6rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-inline: auto;
+        }
+
+        /* Terminal/Install Block */
+        .install-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 1.5rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .code {
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .code .prompt { color: var(--accent-2); margin-right: 0.5rem; }
+        .code .cmd { color: #fff; }
+
+        .copy-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background: var(--surface-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 4rem;
+            padding-bottom: 8rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: var(--surface-hover);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent-1);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-code {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #d4d4d8;
+        }
+
+        /* Typography focused showcase */
+        .showcase {
+            padding: 5rem 0 8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .showcase-header h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .showcase-header p {
+            color: var(--text-muted);
+        }
+
+        .example-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .text-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .text-content p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .typographic-block {
+            background: rgba(0,0,0,0.2);
+            border-left: 2px solid var(--accent-1);
+            padding: 2rem;
+            border-radius: 0 16px 16px 0;
+            font-size: 1.1rem;
+            color: #e4e4e7;
+            font-style: italic;
+            position: relative;
+        }
+
+        .typographic-block::before {
+            content: '"';
+            position: absolute;
+            top: 0rem;
+            left: 1rem;
+            font-size: 4rem;
+            color: rgba(255,255,255,0.05);
+            font-family: serif;
+            line-height: 1;
+        }
+
+        @media (max-width: 768px) {
+            .install-box {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+            }
+            .example-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-light">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container">
+        <nav class="animate-up delay-1">
+            <div class="logo">
+                consolidate <span class="logo-icon">⚡️</span>
+            </div>
+            <div class="nav-links">
+                <a href="https://github.com/vittau/consolidate" target="_blank">View on GitHub</a>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1 class="animate-up delay-2">Your second brain,<br>seamlessly organized.</h1>
+            <p class="animate-up delay-3">A personal journaling framework that blends the frictionless writing of a Bullet Journal with the retrieval power of an AI agent. Write freely. Consolidate automatically.</p>
+            
+            <div class="install-box animate-up delay-4">
+                <div class="code">
+                    <span class="prompt">$</span><span class="cmd">npx create-consolidate journal</span>
+                </div>
+                <button class="copy-btn" onclick="navigator.clipboard.writeText('npx create-consolidate journal')">
+                    Copy
+                </button>
+            </div>
+        </section>
+
+        <section class="features-grid">
+            <div class="card animate-up delay-2">
+                <div class="card-icon">✎</div>
+                <h3>Frictionless Logging</h3>
+                <p>Jot down tasks, notes, and events as they happen using a simplified Bullet Journal notation. No complex apps, just you and a markdown file.</p>
+                <div class="card-code">
+                    - (.) Draft Q2 roadmap<br>
+                    - (x) Reply to Marina<br>
+                    - (o) Team offsite kickoff
+                </div>
+            </div>
+
+            <div class="card animate-up delay-3">
+                <div class="card-icon">⚙️</div>
+                <h3>Automated Summaries</h3>
+                <p>Stop doing migration overhead. The agent runs in the background, rolling up your daily logs into beautifully synthesized weekly and monthly reviews.</p>
+                <div class="card-code">
+                    > /consolidate<br>
+                    ✓ 7 daily entries processed<br>
+                    ✓ Weekly summary created
+                </div>
+            </div>
+
+            <div class="card animate-up delay-4">
+                <div class="card-icon">🧠</div>
+                <h3>Time-Travel Queries</h3>
+                <p>Ask questions about your own life using natural language. The AI searches your index, understands synonyms, and synthesizes answers across months of context.</p>
+                <div class="card-code">
+                    > /when did we launch user roles?<br>
+                    > /explain my focus last month
+                </div>
+            </div>
+        </section>
+
+        <section class="showcase">
+            <div class="showcase-header animate-up">
+                <h2>A system designed to get out of your way.</h2>
+                <p>Built exclusively on markdown and standard folder structures.</p>
+            </div>
+            <div class="example-layout animate-up">
+                <div class="text-content">
+                    <h3>Future-proof your memories</h3>
+                    <p>Proprietary databases lock your life behind subscriptions. Consolidate operates entirely on local `.md` files that you own forever.</p>
+                    <p>The AI skills run locally on your machine via Claude Code, preserving the privacy of your most personal thoughts, while bringing enterprise-grade intelligence to your notebook.</p>
+                </div>
+                <div class="typographic-block">
+                    The core philosophy is simple: writing should be instant and freeform. Organizing should be completely delegated to the machine. You write, it remembers.
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Simple script for copy button feedback
+        document.querySelector('.copy-btn').addEventListener('click', function() {
+            const originalText = this.innerText;
+            this.innerText = 'Copied!';
+            this.style.borderColor = '#10b981';
+            this.style.color = '#10b981';
+            setTimeout(() => {
+                this.innerText = originalText;
+                this.style.borderColor = '';
+                this.style.color = '';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

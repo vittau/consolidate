@@ -18,7 +18,7 @@
     "node": ">=18"
   },
   "license": "MIT",
-  "homepage": "https://vittau.github.io/consolidate/",
+  "homepage": "https://www.vitormach.dev/consolidate/",
   "repository": "github:vittau/consolidate",
   "keywords": [
     "claude-code",
