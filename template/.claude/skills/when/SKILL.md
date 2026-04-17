@@ -1,41 +1,41 @@
 ---
 name: when
-description: Encontra quando um evento, pessoa ou tópico aparece no journal. Use quando o usuário disser /when <consulta>, ou perguntar "quando X aconteceu" / "quando foi a última vez que vi Y". Recebe uma consulta em texto e retorna datas com trechos de citação.
+description: Finds when an event, person, or topic appears in the journal. Use when the user says /when <query>, or asks "when did X happen" / "when was the last time I saw Y". Takes a text query and returns dates with quote snippets.
 ---
 
 # when
 
-A consulta do usuário é passada como argumentos para esta skill.
+The user's query is passed as arguments to this skill.
 
-## Abordagem — percorrer a hierarquia de cima para baixo
+## Approach — walk the hierarchy top-down
 
-O layout é hierárquico: `entries/monthly/<YYYY>/<YYYY-MM>.md`, `entries/weekly/<YYYY-MM>/<YYYY-Www>.md` e `entries/daily/<YYYY-MM>/<YYYY-MM-DD>.md` (o `<YYYY-MM>` no caminho semanal refere-se ao mês da quinta-feira da semana ISO). Use globs com dois níveis (`*/*.md`) para alcançar todos os arquivos em cada camada.
+The layout is hierarchical: `entries/monthly/<YYYY>/<YYYY-MM>.md`, `entries/weekly/<YYYY-MM>/<YYYY-Www>.md`, and `entries/daily/<YYYY-MM>/<YYYY-MM-DD>.md` (the `<YYYY-MM>` in the weekly path refers to the month of the ISO week's Thursday). Use two-level globs (`*/*.md`) to reach all files at each layer.
 
-1. **Extraia termos de busca** da consulta:
-   - Palavras-chave literais (minúsculas, separadas por hífen quando multi-palavra).
-   - 2–5 sinônimos plausíveis ou termos estreitamente relacionados. Sem consulta externa — raciocine no modelo.
+1. **Extract search terms** from the query:
+   - Literal keywords (lowercase, hyphen-separated when multi-word).
+   - 2–5 plausible synonyms or closely related terms. No external lookup — reason within the model.
 
-2. **Camada mensal primeiro.** Faça grep por meses candidatos:
+2. **Monthly layer first.** Grep for candidate months:
    ```bash
-   grep -l -i -E "<termo1>|<termo2>|..." entries/monthly/*/*.md 2>/dev/null
+   grep -l -i -E "<term1>|<term2>|..." entries/monthly/*/*.md 2>/dev/null
    ```
-   Execute também uma passagem mais estrita somente contra as linhas de palavras-chave:
+   Also run a stricter pass against the keyword lines only:
    ```bash
-   grep -l -E "^keywords:.*(<termo1>|<termo2>)" entries/monthly/*/*.md 2>/dev/null
+   grep -l -E "^keywords:.*(<term1>|<term2>)" entries/monthly/*/*.md 2>/dev/null
    ```
-   O bloco `keywords: [...]` é sempre uma única linha por arquivo — o match estrito não precisa lidar com wrap.
+   The `keywords: [...]` block is always a single line per file — the strict match doesn't need to handle wrapping.
 
-3. **Restrinja para semanas.** Para cada mês candidato, as semanas que pertencem a ele são aquelas cuja quinta-feira da semana ISO cai naquele mês — e vivem em `entries/weekly/<YYYY-MM>/`. Faça grep nesse subdiretório.
+3. **Narrow down to weeks.** For each candidate month, the weeks that belong to it are those whose ISO week's Thursday falls in that month — and they live in `entries/weekly/<YYYY-MM>/`. Grep in that subdirectory.
 
-4. **Aponte os dias.** Para cada semana candidata, leia os arquivos diários daquela semana (segunda → domingo). Uma semana pode atravessar dois subdiretórios `entries/daily/<YYYY-MM>/` quando cruza a virada de mês; localize os trechos correspondentes exatos em ambos quando for o caso.
+4. **Pinpoint the days.** For each candidate week, read the daily files of that week (Monday → Sunday). A week may span two `entries/daily/<YYYY-MM>/` subdirectories when it crosses a month boundary; locate the exact matching snippets in both when applicable.
 
-5. **Fallback — períodos sem cobertura.** Para entradas recentes demais para ter resumos semanais/mensais (semana atual, mês atual), faça grep diretamente nos arquivos diários:
+5. **Fallback — uncovered periods.** For entries too recent to have weekly/monthly summaries (current week, current month), grep directly against daily files:
    ```bash
-   grep -l -i -E "<termos>" entries/daily/*/*.md 2>/dev/null
+   grep -l -i -E "<terms>" entries/daily/*/*.md 2>/dev/null
    ```
 
-## Saída
+## Output
 
-- Uma linha por correspondência, em ordem cronológica: `YYYY-MM-DD — <trecho em uma linha>`.
-- Agrupe correspondências bem relacionadas sob um cabeçalho breve se a resposta abranger múltiplas ocasiões.
-- Se nada corresponder, informe os termos e sinônimos tentados e sugira as 3–5 palavras-chave mais próximas presentes no índice (a partir de grep nas linhas `^keywords:` pela árvore).
+- One line per match, in chronological order: `YYYY-MM-DD — <single-line snippet>`.
+- Group closely related matches under a short heading if the answer spans multiple occasions.
+- If nothing matches, report the terms and synonyms tried and suggest the 3–5 closest keywords present in the index (from grepping `^keywords:` lines across the tree).

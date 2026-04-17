@@ -87,7 +87,7 @@ function listMd(root, dirRe, nameRe) {
     const full = path.join(root, entry.name);
     if (entry.isDirectory()) {
       if (!dirRe.test(entry.name)) {
-        console.warn(`warn: ignoring ${full} (subdiretório não canônico para ${root})`);
+        console.warn(`warn: ignoring ${full} (non-canonical subdirectory for ${root})`);
         continue;
       }
       const files = fs.readdirSync(full).filter((f) => f.endsWith('.md')).sort();
@@ -96,11 +96,11 @@ function listMd(root, dirRe, nameRe) {
         if (nameRe.test(name)) {
           kept.push(path.join(full, f));
         } else {
-          console.warn(`warn: ignoring ${path.join(full, f)} (nome não canônico para ${root})`);
+          console.warn(`warn: ignoring ${path.join(full, f)} (non-canonical name for ${root})`);
         }
       }
     } else if (entry.isFile() && entry.name.endsWith('.md')) {
-      console.warn(`warn: ignoring ${full} (esperado em subdiretório de ${root})`);
+      console.warn(`warn: ignoring ${full} (expected inside a subdirectory of ${root})`);
     }
   }
   kept.sort();

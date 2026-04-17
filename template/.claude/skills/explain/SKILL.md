@@ -1,32 +1,32 @@
 ---
 name: explain
-description: Sintetiza o que o journal diz sobre um assunto. Use quando o usuário disser /explain <assunto>, ou perguntar "o que eu sei sobre X" / "me fale sobre Y com base no meu journal". Recebe uma consulta em texto e retorna uma narrativa datada.
+description: Synthesizes what the journal says about a subject. Use when the user says /explain <subject>, or asks "what do I know about X" / "tell me about Y based on my journal". Takes a text query and returns a dated narrative.
 ---
 
 # explain
 
-A consulta do usuário é passada como argumentos para esta skill.
+The user's query is passed as arguments to this skill.
 
-## Abordagem — correspondência por palavras-chave em todas as camadas, depois síntese
+## Approach — keyword matching across all layers, then synthesis
 
-O layout é hierárquico: `entries/monthly/<YYYY>/<YYYY-MM>.md`, `entries/weekly/<YYYY-MM>/<YYYY-Www>.md` e `entries/daily/<YYYY-MM>/<YYYY-MM-DD>.md` (o `<YYYY-MM>` no caminho semanal é o mês da quinta-feira da semana ISO). Use `*/*.md` em cada camada para alcançar todos os arquivos.
+The layout is hierarchical: `entries/monthly/<YYYY>/<YYYY-MM>.md`, `entries/weekly/<YYYY-MM>/<YYYY-Www>.md`, and `entries/daily/<YYYY-MM>/<YYYY-MM-DD>.md` (the `<YYYY-MM>` in the weekly path is the month of the ISO week's Thursday). Use `*/*.md` at each layer to reach all files.
 
-1. **Extraia os termos.** A partir da consulta, derive:
-   - Palavras-chave literais (minúsculas, separadas por hífen quando multi-palavra).
-   - 3–8 sinônimos plausíveis ou termos estreitamente relacionados. Raciocine no modelo, sem dicionário.
+1. **Extract terms.** From the query, derive:
+   - Literal keywords (lowercase, hyphen-separated when multi-word).
+   - 3–8 plausible synonyms or closely related terms. Reason within the model; no dictionary.
 
-2. **Compare com os blocos de palavras-chave** em todas as camadas:
+2. **Match against keyword blocks** across all layers:
    ```bash
    grep -n -E "^keywords:" entries/monthly/*/*.md entries/weekly/*/*.md entries/daily/*/*.md 2>/dev/null
    ```
-   Cada arquivo tem exatamente uma linha `^keywords:` (nunca quebra). Um arquivo é candidato se qualquer uma das suas palavras-chave contiver um termo da consulta ou sinônimo como substring (assim `reuniao` corresponde a `reuniao-do-time`). Faça também um grep case-insensitive no arquivo inteiro como fallback, caso o assunto apareça no texto mas tenha passado despercebido na extração de palavras-chave.
+   Each file has exactly one `^keywords:` line (never wraps). A file is a candidate if any of its keywords contains a query term or synonym as a substring (so `meeting` matches `team-meeting`). Also run a case-insensitive grep over the full file as a fallback, in case the subject appears in the text but was missed in keyword extraction.
 
-3. **Leia as correspondências em ordem decrescente de abrangência**: mensal (arco) → semanal (fases) → diário (especificidades). Use os resumos mensais/semanais como esqueleto e desça às entradas diárias apenas para momentos concretos, citações e pontos em aberto.
+3. **Read the matches in decreasing breadth**: monthly (arc) → weekly (phases) → daily (specifics). Use monthly/weekly summaries as the skeleton and drop down to daily entries only for concrete moments, quotes, and open items.
 
-4. **Sintetize a resposta**:
-   - Comece com um resumo de 1–2 frases sobre o que o journal diz a respeito do assunto.
-   - Depois, apresente um detalhamento cronológico ou temático.
-   - Cite uma `YYYY-MM-DD` específica para toda afirmação concreta; cite uma semana (`YYYY-Www`) ou mês (`YYYY-MM`) para afirmações de nível mais alto.
-   - Termine com eventuais pontos em aberto — tarefas não resolvidas, itens agendados ou perguntas que as entradas levantaram mas não responderam.
+4. **Synthesize the answer**:
+   - Start with a 1–2 sentence summary of what the journal says about the subject.
+   - Then give a chronological or thematic breakdown.
+   - Cite a specific `YYYY-MM-DD` for every concrete claim; cite a week (`YYYY-Www`) or month (`YYYY-MM`) for higher-level claims.
+   - Close with any open items — unresolved tasks, scheduled items, or questions the entries raised but didn't answer.
 
-5. **Se nada corresponder**, informe os termos e sinônimos tentados e mostre as 5 palavras-chave mais próximas presentes no índice (amostre linhas `^keywords:` pela árvore).
+5. **If nothing matches**, report the terms and synonyms tried and show the 5 closest keywords present in the index (sample `^keywords:` lines across the tree).

@@ -1,190 +1,190 @@
 ---
 name: consolidate
-description: Processa o trabalho pendente do journal — adiciona palavras-chave a entradas diárias, resume semanas ISO completas e resume meses completos. Use quando o usuário disser /consolidate, pedir para indexar/resumir/atualizar o journal, ou implicitamente via `new-entry`.
+description: Processes pending journal work — adds keywords to daily entries, summarizes complete ISO weeks, and summarizes complete months. Use when the user says /consolidate, asks to index/summarize/update the journal, or implicitly via `new-entry`.
 ---
 
 # consolidate
 
-## Passo 0 — Garantir repositório git
+## Step 0 — Ensure a git repository
 
-### 0.1 — Verificar instalação do git
+### 0.1 — Check the git installation
 
-Antes de qualquer outra coisa, verifique se o binário `git` existe na máquina:
+Before anything else, verify that the `git` binary exists on the machine:
 
 ```bash
 command -v git >/dev/null 2>&1
 ```
 
-Se o comando falhar (código ≠ 0), **pare imediatamente** e informe o usuário com a mensagem:
+If the command fails (exit code ≠ 0), **stop immediately** and tell the user:
 
-> ❌ `git` não está instalado nesta máquina. A instalação do git é **obrigatória** para usar o framework `consolidate` (o passo 6 de cada execução grava o trabalho no histórico). Instale-o em https://git-scm.com/downloads e rode a skill novamente.
+> ❌ `git` is not installed on this machine. Installing git is **required** to use the `consolidate` framework (step 6 of each run commits the work to history). Install it from https://git-scm.com/downloads and run the skill again.
 
-Não prossiga com nenhum outro passo enquanto o git não estiver disponível.
+Do not proceed with any other step until git is available.
 
-### 0.2 — Verificar/inicializar o repositório
+### 0.2 — Check / initialize the repository
 
-Verifique se o diretório é um repositório git:
+Check whether the directory is a git repository:
 
 ```bash
 git -C "${CLAUDE_PROJECT_DIR:-.}" rev-parse --is-inside-work-tree 2>/dev/null
 ```
 
-Se já for (código 0), siga para o Passo 1.
+If it is (exit code 0), go to Step 1.
 
-Caso contrário, inicialize o repositório **e** crie um commit inicial contendo apenas as skills e os arquivos base do projeto — nunca entradas do usuário:
+Otherwise, initialize the repo **and** create an initial commit containing only the skills and project base files — never user entries:
 
 ```bash
 git -C "${CLAUDE_PROJECT_DIR:-.}" init
 ```
 
-Em seguida, faça stage explícito apenas dos caminhos base que de fato existirem no repositório. Candidatos esperados:
+Then explicitly stage only the base paths that actually exist in the repo. Expected candidates:
 
-- `.claude/` — skills, settings e demais artefatos do Claude Code.
-- `CLAUDE.md` — instruções do projeto para o Claude Code.
-- `README.md` — documentação voltada ao usuário.
-- `package.json` — marcador ESM e script `detect`.
-- `.prettierrc` — configuração de formatação.
+- `.claude/` — skills, settings, and other Claude Code artifacts.
+- `CLAUDE.md` — project instructions for Claude Code.
+- `README.md` — user-facing documentation.
+- `package.json` — ESM marker and `detect` script.
+- `.prettierrc` — formatting configuration.
 
-Stage somente os que existirem (omita os ausentes) e **nunca** use `git add .` ou `-A` aqui, para evitar capturar `.DS_Store`, `entries/` ou outros artefatos:
+Stage only those that exist (skip the missing ones), and **never** use `git add .` or `-A` here, to avoid capturing `.DS_Store`, `entries/`, or other artifacts:
 
 ```bash
-git -C "${CLAUDE_PROJECT_DIR:-.}" add <caminhos base existentes>
+git -C "${CLAUDE_PROJECT_DIR:-.}" add <existing base paths>
 ```
 
-Commit inicial (heredoc para preservar formatação):
+Initial commit (heredoc to preserve formatting):
 
 ```bash
 git -C "${CLAUDE_PROJECT_DIR:-.}" commit -m "$(cat <<'EOF'
-init: skills e arquivos base do projeto
+init: skills and project base files
 
-Commit inicial gerado automaticamente pela skill consolidate
-na primeira execução em um diretório sem repositório git.
+Initial commit generated automatically by the consolidate skill
+on its first run in a directory without a git repository.
 EOF
 )"
 ```
 
-Se o commit inicial falhar por hook, investigue e refaça — não use `--no-verify`. Depois disso, prossiga normalmente; o Passo 6 continua responsável por commitar o trabalho de consolidação desta execução (entradas diárias, semanais e mensais).
+If the initial commit fails due to a hook, investigate and retry — do not use `--no-verify`. After that, proceed normally; Step 6 is still responsible for committing this run's consolidation work (daily, weekly, and monthly entries).
 
-## Passo 1 — Detectar o trabalho pendente
+## Step 1 — Detect pending work
 
-Execute o script de detecção:
+Run the detection script:
 
 ```bash
 node "${CLAUDE_PROJECT_DIR:-.}/.claude/skills/consolidate/detect.js"
 ```
 
-Ele imprime três seções:
-1. Entradas diárias sem bloco `keywords:`.
-2. Semanas ISO completas sem resumo semanal.
-3. Meses completos sem resumo mensal.
+It prints three sections:
+1. Daily entries without a `keywords:` block.
+2. Complete ISO weeks without a weekly summary.
+3. Complete months without a monthly summary.
 
-Se as três estiverem `(none)`, informe "nada a consolidar" e pare.
+If all three are `(none)`, report "nothing to consolidate" and stop.
 
-## Passo 2 — Adicionar palavras-chave às entradas diárias
+## Step 2 — Add keywords to daily entries
 
-Para cada arquivo diário listado na seção 1:
-1. Leia o conteúdo completo.
-2. Extraia **5–15 palavras-chave em minúsculas** capturando as pessoas, projetos, lugares, eventos e temas mais relevantes. Use hífen em termos multi-palavra (ex.: `avaliacao-de-desempenho`). Evite preenchimentos genéricos.
-3. Adicione este bloco ao **final** do arquivo, preservando todo o conteúdo anterior e deixando exatamente uma linha em branco antes do `---`:
+For each daily file listed in section 1:
+1. Read the full contents.
+2. Extract **5–15 lowercase keywords** capturing the most relevant people, projects, places, events, and themes. Hyphenate multi-word terms (e.g., `performance-review`). Avoid generic filler.
+3. Append this block to the **end** of the file, preserving all prior content and leaving exactly one blank line before `---`:
 
    ```
    
    ---
-   keywords: [palavra1, palavra2, palavra3]
+   keywords: [word1, word2, word3]
    ```
 
-Nunca toque no conteúdo escrito pelo usuário.
+Never touch the user-written content.
 
-## Passo 3 — Resumir semanas completas
+## Step 3 — Summarize complete weeks
 
-Para cada semana pendente (`YYYY-Www`) listada na seção 2:
-1. Identifique os arquivos diários daquela semana. Uma semana ISO vai de segunda → domingo; combine nomes de arquivo calculando o `isocalendar()` de cada arquivo diário. Os diários vivem em `entries/daily/<YYYY-MM>/<YYYY-MM-DD>.md`, então uma semana pode atravessar dois subdiretórios quando cruza um mês.
-2. Leia todos eles (eles já têm blocos de palavras-chave porque o passo 2 rodou primeiro).
-3. Escreva `entries/weekly/<YYYY-MM>/<YYYY-Www>.md`, onde `<YYYY-MM>` é o ano-mês da **quinta-feira** da semana ISO (padrão ISO para atribuir uma semana a um mês). Crie o subdiretório se ainda não existir (`mkdir -p`):
+For each pending week (`YYYY-Www`) listed in section 2:
+1. Identify the daily files for that week. An ISO week runs Monday → Sunday; match filenames by computing each daily file's `isocalendar()`. Daily files live at `entries/daily/<YYYY-MM>/<YYYY-MM-DD>.md`, so a week can span two subdirectories when it crosses a month boundary.
+2. Read all of them (they already have keyword blocks because step 2 ran first).
+3. Write `entries/weekly/<YYYY-MM>/<YYYY-Www>.md`, where `<YYYY-MM>` is the year-month of the ISO week's **Thursday** (ISO standard for assigning a week to a month). Create the subdirectory if it doesn't exist yet (`mkdir -p`):
 
    ```markdown
    # <YYYY-Www> · <DD Mmm> – <DD Mmm>
 
-   ## Resumo
-   <Narrativa de 4–8 frases cobrindo os temas, eventos-chave e resultados da semana.>
+   ## Summary
+   <4–8 sentence narrative covering the week's themes, key events, and outcomes.>
 
    ## Carry-forward
-   <Tarefas `- (<)` agendadas e tarefas `- (.)` não concluídas da semana. Cada carry-forward é em si um item de lista markdown, com a data de origem adicionada entre parênteses após o texto, ex.: `- (.) ligar para o contador (de 2026-04-14)`. Omita a seção se não houver carry-forwards.>
+   <Scheduled `- (<)` tasks and unfinished `- (.)` tasks from the week. Each carry-forward is itself a markdown list item, with the source date added in parentheses after the text, e.g., `- (.) call the accountant (from 2026-04-14)`. Omit the section if there are no carry-forwards.>
 
    ---
-   keywords: [palavra1, palavra2, ...]
+   keywords: [word1, word2, ...]
    ```
 
-   `Mmm` em português: `Jan`, `Fev`, `Mar`, `Abr`, `Mai`, `Jun`, `Jul`, `Ago`, `Set`, `Out`, `Nov`, `Dez`.
+   `Mmm` in English: `Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`.
 
-4. Palavras-chave: a união mais relevante das palavras-chave diárias (mire em 10–20).
+4. Keywords: the most relevant union of the daily keywords (aim for 10–20).
 
-## Passo 4 — Resumir meses completos
+## Step 4 — Summarize complete months
 
-Para cada mês pendente (`YYYY-MM`) listado na seção 3:
-1. Identifique os arquivos semanais cuja **quinta-feira** da semana ISO cai naquele mês (padrão ISO para atribuir uma semana a um mês). Esses arquivos vivem em `entries/weekly/<YYYY-MM>/` pelo mesmo critério — portanto, para um mês, todos os semanais candidatos estão no subdiretório `entries/weekly/<YYYY-MM>/`.
-2. Leia-os.
-3. Escreva `entries/monthly/<YYYY>/<YYYY-MM>.md`. Crie o subdiretório do ano se ainda não existir (`mkdir -p`):
+For each pending month (`YYYY-MM`) listed in section 3:
+1. Identify the weekly files whose ISO week's **Thursday** falls in that month (ISO standard for assigning a week to a month). By the same rule, those files live in `entries/weekly/<YYYY-MM>/` — so for a given month, all candidate weekly files are in the `entries/weekly/<YYYY-MM>/` subdirectory.
+2. Read them.
+3. Write `entries/monthly/<YYYY>/<YYYY-MM>.md`. Create the year subdirectory if it doesn't exist yet (`mkdir -p`):
 
    ```markdown
-   # <Mês YYYY>
+   # <Month YYYY>
 
-   ## Resumo
-   <Narrativa mais ampla, de 6–12 frases, cobrindo as semanas do mês.>
+   ## Summary
+   <Broader 6–12 sentence narrative covering the month's weeks.>
 
-   ## Pontos em aberto
-   <Carry-forwards ainda não resolvidos no fim do mês. Omita se não houver.>
+   ## Open items
+   <Carry-forwards still unresolved at the end of the month. Omit if none.>
 
    ---
-   keywords: [palavra1, palavra2, ...]
+   keywords: [word1, word2, ...]
    ```
 
-   `Mês` em português por extenso: `Janeiro`, `Fevereiro`, `Março`, `Abril`, `Maio`, `Junho`, `Julho`, `Agosto`, `Setembro`, `Outubro`, `Novembro`, `Dezembro`.
+   `Month` in English, written out: `January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`.
 
-4. Palavras-chave: a união mais relevante das palavras-chave semanais (mire em 15–30).
+4. Keywords: the most relevant union of the weekly keywords (aim for 15–30).
 
-## Passo 5 — Reportar
+## Step 5 — Report
 
-Resuma para o usuário em uma linha: `N diárias com palavras-chave · M resumos semanais · K resumos mensais`.
+Summarize for the user in one line: `N dailies with keywords · M weekly summaries · K monthly summaries`.
 
-## Passo 6 — Commit git
+## Step 6 — Git commit
 
-Se nenhum arquivo foi tocado nos passos 2–4, pule este passo (nada a commitar).
+If no files were touched in steps 2–4, skip this step (nothing to commit).
 
-Caso contrário, faça um único commit que inclua apenas os arquivos efetivamente produzidos ou alterados por esta execução:
+Otherwise, make a single commit that includes only the files actually produced or changed by this run:
 
-- Arquivos diários que receberam bloco de palavras-chave no passo 2.
-- Arquivos semanais criados no passo 3.
-- Arquivos mensais criados no passo 4.
+- Daily files that received a keyword block in step 2.
+- Weekly files created in step 3.
+- Monthly files created in step 4.
 
-Passos:
+Steps:
 
-1. Stage explícito (nunca `git add .` ou `-A`):
+1. Explicit stage (never `git add .` or `-A`):
 
    ```bash
-   git -C "${CLAUDE_PROJECT_DIR:-.}" add <caminhos tocados nos passos 2–4>
+   git -C "${CLAUDE_PROJECT_DIR:-.}" add <paths touched in steps 2–4>
    ```
 
-2. Monte a mensagem no formato:
+2. Build the message in this format:
 
    ```
-   consolidate: <resumo>
+   consolidate: <summary>
 
    daily: YYYY-MM-DD, YYYY-MM-DD, ...
    weekly: YYYY-Www, ...
    monthly: YYYY-MM, ...
    ```
 
-   Regras da mensagem:
-   - A linha `<resumo>` é um contador curto, ex.: `3 diárias, 1 semanal`.
-   - Inclua somente as linhas `daily:` / `weekly:` / `monthly:` que tiverem itens; omita as vazias.
-   - Se não houver diárias mas houver resumos semanais ou mensais, a seção de "dias consolidados" é representada pelas datas de cobertura daqueles resumos (ex.: `weekly: 2026-W15` cobre 2026-04-06 – 2026-04-12).
+   Message rules:
+   - The `<summary>` line is a short counter, e.g., `3 dailies, 1 weekly`.
+   - Include only the `daily:` / `weekly:` / `monthly:` lines that have items; omit the empty ones.
+   - If there are no dailies but there are weekly or monthly summaries, the "consolidated days" section is represented by the coverage dates of those summaries (e.g., `weekly: 2026-W15` covers 2026-04-06 – 2026-04-12).
 
-3. Commit via heredoc, preservando quebras de linha:
+3. Commit via heredoc, preserving line breaks:
 
    ```bash
    git -C "${CLAUDE_PROJECT_DIR:-.}" commit -m "$(cat <<'EOF'
-   consolidate: <resumo>
+   consolidate: <summary>
 
    daily: ...
    weekly: ...
@@ -193,14 +193,14 @@ Passos:
    )"
    ```
 
-Se o commit falhar por causa de um hook, investigue a causa e refaça — não use `--no-verify`.
+If the commit fails because of a hook, investigate the root cause and retry — do not use `--no-verify`.
 
-## Regras
+## Rules
 
-- Execute `detect.js` primeiro. Processe apenas o que ele listar. Não reaplique palavras-chave em arquivos diários que já têm um bloco `keywords:`. Não sobrescreva arquivos semanais/mensais existentes.
-- Nunca edite o conteúdo escrito pelo usuário em uma entrada diária — apenas adicione o bloco de palavras-chave.
-- O bloco de palavras-chave é sempre a **última coisa** no arquivo.
-- A linha `keywords: [...]` **nunca quebra** em múltiplas linhas, mesmo que ultrapasse `printWidth`. As skills `when` e `explain` dependem de um único `^keywords:` por arquivo para o grep estrito.
-- A ordem importa: execute os passos 2 → 3 → 4 nessa ordem, para que os resumos semanais possam se apoiar nas palavras-chave diárias recém-adicionadas.
-- Re-execução é idempotente: se a skill for interrompida entre passos, basta rodar de novo — `detect.js` só lista o que ainda falta. O passo 6 só commita se houve trabalho novo, então repetições não geram commits vazios.
-- O passo 6 não usa `git add .` nem `-A`. Stage sempre explícito nos arquivos dos passos 2–4 para evitar capturar artefatos como `.DS_Store`.
+- Run `detect.js` first. Process only what it lists. Don't re-apply keywords to daily files that already have a `keywords:` block. Don't overwrite existing weekly/monthly files.
+- Never edit user-written content in a daily entry — only append the keyword block.
+- The keyword block is always the **last thing** in the file.
+- The `keywords: [...]` line **never wraps** across multiple lines, even if it exceeds `printWidth`. The `when` and `explain` skills rely on a single `^keywords:` per file for strict grep.
+- Order matters: run steps 2 → 3 → 4 in that order, so weekly summaries can lean on the freshly added daily keywords.
+- Re-running is idempotent: if the skill is interrupted between steps, just run it again — `detect.js` only lists what's still missing. Step 6 commits only if there's new work, so re-runs don't produce empty commits.
+- Step 6 does not use `git add .` or `-A`. Always stage explicitly the files from steps 2–4 to avoid capturing artifacts like `.DS_Store`.

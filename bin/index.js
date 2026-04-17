@@ -11,8 +11,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const TEMPLATE_DIR = resolve(__dirname, "..", "template");
 
-const USAGE = `Uso: npm create consolidate@latest <nome-do-diretorio>
-   ou: npx create-consolidate <nome-do-diretorio>`;
+const USAGE = `Usage: npm create consolidate@latest <directory-name>
+   or: npx create-consolidate <directory-name>`;
 
 function die(msg, code = 1) {
   console.error(msg);
@@ -22,7 +22,7 @@ function die(msg, code = 1) {
 async function promptProjectName() {
   const rl = createInterface({ input, output });
   try {
-    const answer = (await rl.question("Nome do diretório do journal: ")).trim();
+    const answer = (await rl.question("Journal directory name: ")).trim();
     return answer;
   } finally {
     rl.close();
@@ -45,14 +45,14 @@ function initGit(dir) {
   const git = (args) => spawnSync("git", args, { cwd: dir, stdio: "ignore" });
   const check = spawnSync("git", ["--version"], { stdio: "ignore" });
   if (check.status !== 0) {
-    console.warn("⚠  git não encontrado — pulando git init. Rode manualmente depois.");
+    console.warn("⚠  git not found — skipping git init. Run it manually later.");
     return false;
   }
   if (git(["init", "-q"]).status !== 0) return false;
   git(["add", "."]);
   const commit = spawnSync(
     "git",
-    ["commit", "-q", "-m", "init: skills e arquivos base do projeto"],
+    ["commit", "-q", "-m", "init: skills and project base files"],
     { cwd: dir, stdio: "inherit" }
   );
   return commit.status === 0;
@@ -62,19 +62,19 @@ async function main() {
   let target = process.argv[2];
   if (!target) {
     target = await promptProjectName();
-    if (!target) die(`Nome do diretório é obrigatório.\n\n${USAGE}`);
+    if (!target) die(`Directory name is required.\n\n${USAGE}`);
   }
-  if (target.startsWith("-")) die(`Argumento inválido: ${target}\n\n${USAGE}`);
+  if (target.startsWith("-")) die(`Invalid argument: ${target}\n\n${USAGE}`);
 
   const destPath = resolve(process.cwd(), target);
   const projectName = basename(destPath);
 
   if (existsSync(destPath) && !isDirEmpty(destPath)) {
-    die(`Diretório ${destPath} já existe e não está vazio. Abortando.`);
+    die(`Directory ${destPath} already exists and is not empty. Aborting.`);
   }
 
   if (!existsSync(TEMPLATE_DIR)) {
-    die(`Template não encontrado em ${TEMPLATE_DIR}. Instalação corrompida?`);
+    die(`Template not found at ${TEMPLATE_DIR}. Corrupted install?`);
   }
 
   mkdirSync(destPath, { recursive: true });
@@ -97,14 +97,14 @@ async function main() {
   const gitOk = initGit(destPath);
 
   console.log("");
-  console.log(`✓ Criado ${projectName}/`);
-  console.log("✓ Skills do Claude Code instaladas em .claude/skills/");
-  if (gitOk) console.log("✓ Repo git inicializado");
+  console.log(`✓ Created ${projectName}/`);
+  console.log("✓ Claude Code skills installed in .claude/skills/");
+  if (gitOk) console.log("✓ Git repo initialized");
   console.log("");
-  console.log("Próximos passos:");
+  console.log("Next steps:");
   console.log(`  cd ${target}`);
-  console.log("  # edite ABOUT.md para contar ao Claude quem é você");
-  console.log("  claude   # abrir o Claude Code");
+  console.log("  # edit ABOUT.md to tell Claude who you are");
+  console.log("  claude   # open Claude Code");
   console.log("  /new-entry");
   console.log("");
 }

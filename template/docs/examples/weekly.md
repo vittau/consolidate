@@ -1,15 +1,15 @@
 # 2026-W11 · 09 Mar – 15 Mar
 
-## Resumo
+## Summary
 
-Semana do kickoff do projeto Atlas, com Marina assumindo a frente de dados e um spike de 3 dias para validar o esquema do DW. O principal risco mapeado foi a dependência com o time de billing, que só libera a tabela de faturas na W12. Em paralelo, avancei no RFC de autenticação com a Patrícia e fechei higienização de acessos legados na AWS. A revisão trimestral ficou agendada para W12 com o gerente, e um 1:1 com Rafael também entrou na agenda. Nada de urgente ficou em aberto, mas o documento de arquitetura do Atlas ainda não foi rascunhado.
+Week of the Project Atlas kickoff, with Marina taking over the data track and a 3-day spike to validate the DW schema. The main risk mapped out was the dependency on the billing team, which won't release the invoices table until W12. In parallel, I moved the auth RFC forward with Patricia and closed out hygiene work on legacy AWS access. The quarterly review was scheduled for W12 with my manager, and a 1:1 with Rafael also entered the agenda. Nothing urgent was left open, but the Atlas architecture doc hasn't been drafted yet.
 
 ## Carry-forward
 
-- (.) rascunhar documento de arquitetura do Atlas (de 2026-03-12)
-- (.) responder follow-up da Patrícia sobre RFC de autenticação (de 2026-03-12)
-- (<) 1:1 com Rafael 2026-03-16 (de 2026-03-12)
-- (<) revisão trimestral com o gerente 2026-03-20 (de 2026-03-12)
+- (.) draft Atlas architecture doc (from 2026-03-12)
+- (.) reply to Patricia's follow-up on the auth RFC (from 2026-03-12)
+- (<) 1:1 with Rafael 2026-03-16 (from 2026-03-12)
+- (<) quarterly review with manager 2026-03-20 (from 2026-03-12)
 
 ---
-keywords: [atlas, marina, patricia, rafael, data-warehouse, rfc-autenticacao, aws, billing, revisao-trimestral, kickoff, arquitetura, spike]
+keywords: [atlas, marina, patricia, rafael, data-warehouse, auth-rfc, aws, billing, quarterly-review, kickoff, architecture, spike]

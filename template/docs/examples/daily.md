@@ -1,14 +1,14 @@
-# 2026-03-12 · Quinta-feira
+# 2026-03-12 · Thursday
 
-- (o) kickoff do projeto Atlas
-  - Marina vai liderar a frente de dados. Combinamos um spike de 3 dias para validar o esquema do DW.
-  - Risco levantado: dependência com o time de billing que só libera a tabela de faturas semana que vem.
-- (.) rascunhar documento de arquitetura do Atlas
-- (.) responder follow-up da Patrícia sobre RFC de autenticação
-- (x) cancelar acesso antigo de consultor na AWS
-- (<) 1:1 com Rafael 2026-03-16
-- (<) revisão trimestral com o gerente 2026-03-20
-- (-) ideia: expor métricas de ingestão como Prometheus, não como tabela no DW — pensar melhor
+- (o) Project Atlas kickoff
+  - Marina will lead the data track. We agreed on a 3-day spike to validate the DW schema.
+  - Risk flagged: dependency on the billing team, which won't release the invoices table until next week.
+- (.) draft Atlas architecture doc
+- (.) reply to Patricia's follow-up on the auth RFC
+- (x) revoke old consultant AWS access
+- (<) 1:1 with Rafael 2026-03-16
+- (<) quarterly review with manager 2026-03-20
+- (-) idea: expose ingestion metrics as Prometheus, not as a DW table — think it through
 
 ---
-keywords: [atlas, marina, patricia, rafael, data-warehouse, rfc-autenticacao, aws, billing, revisao-trimestral, prometheus]
+keywords: [atlas, marina, patricia, rafael, data-warehouse, auth-rfc, aws, billing, quarterly-review, prometheus]

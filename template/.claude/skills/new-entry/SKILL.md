@@ -1,29 +1,29 @@
 ---
 name: new-entry
-description: Cria a entrada diária de hoje no journal. Use quando o usuário disser /new-entry, pedir para iniciar o journal de hoje, ou quiser abrir a entrada do dia. Sempre executa `consolidate` primeiro para manter o índice atualizado.
+description: Creates today's daily journal entry. Use when the user says /new-entry, asks to start today's journal, or wants to open today's entry. Always runs `consolidate` first to keep the index up to date.
 ---
 
 # new-entry
 
-1. **Execute `consolidate` primeiro.** Invoque a skill `consolidate` e deixe-a terminar antes de fazer qualquer outra coisa. Não pule esta etapa mesmo se achar que nada está pendente — quem decide é o `consolidate`.
-2. **Calcule a data de hoje** no formato ISO (`YYYY-MM-DD`) usando a data local do sistema (`date +%Y-%m-%d`).
-3. **Crie ou mostre o arquivo diário** em `entries/daily/<YYYY-MM>/<data>.md`, onde `<YYYY-MM>` é o ano-mês da data (primeiros 7 caracteres de `<data>`). Crie o subdiretório do mês se ainda não existir (`mkdir -p`):
-   - Se já existir: não modifique. Informe o caminho e pare.
-   - Se não existir: crie-o com este template mínimo — sem seções extras, sem conteúdo pré-preenchido:
+1. **Run `consolidate` first.** Invoke the `consolidate` skill and let it finish before doing anything else. Do not skip this step even if you think nothing is pending — `consolidate` decides.
+2. **Compute today's date** in ISO format (`YYYY-MM-DD`) using the system's local date (`date +%Y-%m-%d`).
+3. **Create or show the daily file** at `entries/daily/<YYYY-MM>/<date>.md`, where `<YYYY-MM>` is the year-month of the date (first 7 characters of `<date>`). Create the month subdirectory if it doesn't exist yet (`mkdir -p`):
+   - If it already exists: do not modify it. Report the path and stop.
+   - If it doesn't exist: create it with this minimal template — no extra sections, no pre-filled content:
 
      ```markdown
-     # <data> · <dia-da-semana>
+     # <date> · <day-of-week>
 
      ```
 
-     (Uma linha de cabeçalho, uma linha em branco, fim de arquivo. O usuário preenche o resto.)
-4. **Informe** o caminho do arquivo ao usuário para que ele possa abri-lo.
+     (One header line, one blank line, end of file. The user fills in the rest.)
+4. **Report** the file path to the user so they can open it.
 
-## Notação BuJo (para referência do usuário, não para pré-preencher)
+## BuJo notation (for the user's reference, not for pre-filling)
 
-Toda entrada é um item de lista markdown; o símbolo BuJo vem entre parênteses após o marcador:
+Every entry is a markdown list item; the BuJo symbol goes in parentheses after the marker:
 
-- `- (.)` tarefa · `- (x)` concluída · `- (<)` agendada · `- (o)` evento · `- (-)` nota
-- Parênteses (e não colchetes) para não colidir com task lists do GFM (`- [x]` / `- [ ]`).
-- Tudo ASCII de um único toque (teclado US International).
-- A migração é tratada automaticamente pelo `consolidate`; nenhuma notação é necessária.
+- `- (.)` task · `- (x)` completed · `- (<)` scheduled · `- (o)` event · `- (-)` note
+- Parentheses (not brackets) to avoid colliding with GFM task lists (`- [x]` / `- [ ]`).
+- All ASCII, single-keystroke (US International keyboard).
+- Migration is handled automatically by `consolidate`; no notation is needed.

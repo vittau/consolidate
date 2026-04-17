@@ -1,55 +1,55 @@
 # consolidate ⚡️
 
-Scaffold de um repositório de journaling pessoal alimentado por skills do [Claude Code](https://docs.claude.com/en/docs/claude-code). Veja o [template/README.md](template/README.md) para a visão geral do framework que o scaffold gera.
+Scaffold for a personal journaling repository powered by [Claude Code](https://docs.claude.com/en/docs/claude-code) skills. See [template/README.md](template/README.md) for an overview of the framework that the scaffold generates.
 
-## Uso
+## Usage
 
 ```bash
-npm create consolidate@latest meu-journal
-# ou
-npx create-consolidate meu-journal
+npm create consolidate@latest my-journal
+# or
+npx create-consolidate my-journal
 
-cd meu-journal
-claude          # abre o Claude Code no diretório
-/new-entry      # cria a primeira entrada diária
+cd my-journal
+claude          # opens Claude Code in the directory
+/new-entry      # creates the first daily entry
 ```
 
-Se você omitir o nome do diretório, o CLI pergunta interativamente.
+If you omit the directory name, the CLI asks interactively.
 
-## O que o scaffold faz
+## What the scaffold does
 
-1. Cria o diretório de destino.
-2. Copia o template (skills, `CLAUDE.md`, `.prettierrc`, estrutura de `entries/`, exemplos).
-3. Renomeia `_gitignore` para `.gitignore`.
-4. Substitui `{{projectName}}` em `package.json` e `README.md` pelo nome do diretório.
-5. Roda `git init` e cria o commit inicial.
+1. Creates the target directory.
+2. Copies the template (skills, `CLAUDE.md`, `.prettierrc`, `entries/` structure, examples).
+3. Renames `_gitignore` to `.gitignore`.
+4. Replaces `{{projectName}}` in `package.json` and `README.md` with the directory name.
+5. Runs `git init` and creates the initial commit.
 
-## Pré-requisitos
+## Requirements
 
 - Node.js ≥ 18
-- [Claude Code](https://docs.claude.com/en/docs/claude-code) instalado
-- Git (opcional — se faltar, o CLI pula o `git init` e o skill `consolidate` cuida depois)
+- [Claude Code](https://docs.claude.com/en/docs/claude-code) installed
+- Git (optional — if missing, the CLI skips `git init` and the `consolidate` skill handles it later)
 
-## Como funciona
+## How it works
 
-Depois de scaffoldado, o repositório expõe quatro skills do Claude Code:
+Once scaffolded, the repository exposes four Claude Code skills:
 
-| Skill                | O que faz                                                        |
-| -------------------- | ---------------------------------------------------------------- |
-| `/new-entry`         | Cria o arquivo diário de hoje (depois de consolidar pendências). |
-| `/consolidate`       | Indexa entradas diárias, resume semanas ISO e meses completos.   |
-| `/when <consulta>`   | Encontra quando um tópico aparece no journal.                    |
-| `/explain <assunto>` | Sintetiza o que o journal diz sobre um assunto.                  |
+| Skill                | What it does                                                  |
+| -------------------- | ------------------------------------------------------------- |
+| `/new-entry`         | Creates today's daily file (after consolidating any pending work). |
+| `/consolidate`       | Indexes daily entries, summarizes complete ISO weeks and complete months. |
+| `/when <query>`      | Finds when a topic appears in the journal.                    |
+| `/explain <subject>` | Synthesizes what the journal says about a subject.            |
 
-Leia o [template/README.md](template/README.md) para convenções, notação Bullet Journal e estrutura de diretórios.
+Read [template/README.md](template/README.md) for conventions, Bullet Journal notation, and directory structure.
 
-## Desenvolvimento
+## Development
 
 ```bash
-# testar o CLI localmente sem publicar
+# test the CLI locally without publishing
 node bin/index.js /tmp/test-journal
 ```
 
-## Licença
+## License
 
 MIT

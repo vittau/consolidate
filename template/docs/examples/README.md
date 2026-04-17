@@ -1,11 +1,11 @@
-# Exemplos renderizados
+# Rendered examples
 
-Entradas de exemplo para calibrar a saída das skills, especialmente quando
-`consolidate` roda pela primeira vez numa semana ou mês cheios. Os nomes
-são fictícios.
+Example entries to calibrate the skills' output, especially when
+`consolidate` runs for the first time on a full week or month. The names
+are fictional.
 
-- [daily.md](daily.md) — diário com os 5 símbolos BuJo misturados (`.`, `x`, `<`, `o`, `-`) e bloco `keywords:` em uma linha.
-- [weekly.md](weekly.md) — resumo semanal com `## Carry-forward` e data de origem nos itens.
-- [monthly.md](monthly.md) — resumo mensal com `## Pontos em aberto`.
+- [daily.md](daily.md) — daily with the 5 BuJo symbols mixed in (`.`, `x`, `<`, `o`, `-`) and a single-line `keywords:` block.
+- [weekly.md](weekly.md) — weekly summary with `## Carry-forward` and source dates on the items.
+- [monthly.md](monthly.md) — monthly summary with `## Open items`.
 
-Estes arquivos ficam fora de `entries/` intencionalmente — não são entradas reais e não devem aparecer no `detect.js`.
+These files sit outside `entries/` on purpose — they are not real entries and should not show up in `detect.js`.

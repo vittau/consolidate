@@ -1,16 +1,15 @@
-# Sobre mim
+# About me
 
 <!--
-Escreva aqui, em formato livre, o que você acha que o Claude deveria saber
-sobre você para interpretar melhor este journal. Algumas perguntas para
-provocar (apague as que não usar):
+Write here, in free form, what you think Claude should know about you
+to better interpret this journal. Some prompts (delete any you don't use):
 
-- Quem é você? (papel, carreira, contexto de vida)
-- O que te motiva / te interessa atualmente? (projetos, temas, pessoas)
-- Como você prefere que o Claude se comunique? (tom, nível de detalhe, idioma)
-- Há assuntos sensíveis que devem ser tratados com cuidado extra?
-- Algum vocabulário, apelido ou sigla recorrente que o Claude deve entender?
+- Who are you? (role, career, life context)
+- What currently motivates / interests you? (projects, themes, people)
+- How would you like Claude to communicate? (tone, level of detail, language)
+- Are there sensitive topics that should be treated with extra care?
+- Any recurring vocabulary, nicknames, or acronyms Claude should understand?
 
-Este arquivo é carregado automaticamente pelo CLAUDE.md em toda sessão, então
-mantenha-o enxuto. Atualize conforme sua vida mudar.
+This file is auto-loaded by CLAUDE.md in every session, so keep it lean.
+Update it as your life changes.
 -->

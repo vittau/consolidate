@@ -1,13 +1,13 @@
-# Março 2026
+# March 2026
 
-## Resumo
+## Summary
 
-Mês dominado pela fundação do projeto Atlas: kickoff na W11 com Marina na frente de dados, spike de validação do esquema na W12, e o primeiro draft de arquitetura entregue na W13. A dependência com billing se confirmou como bloqueio, resolvida parcialmente em reunião com o time responsável no início da W13. Em paralelo, o RFC de autenticação avançou com a Patrícia — duas rodadas de revisão, fechamento previsto para abril. A revisão trimestral com o gerente aconteceu na W12 e gerou três frentes de melhoria no meu desenvolvimento, registradas no diário da semana. Higienização de acessos AWS foi concluída. Também tive conversas importantes com Rafael em dois 1:1s, consolidando o direcionamento de carreira dele.
+Month dominated by the founding of Project Atlas: kickoff in W11 with Marina on the data track, schema validation spike in W12, and the first architecture draft delivered in W13. The dependency on billing was confirmed as a blocker and partially resolved in a meeting with the responsible team in early W13. In parallel, the auth RFC progressed with Patricia — two review rounds, with closure expected in April. The quarterly review with my manager happened in W12 and produced three areas of improvement for my development, logged in that week's daily entries. AWS access hygiene was completed. I also had important conversations with Rafael in two 1:1s, consolidating his career direction.
 
-## Pontos em aberto
+## Open items
 
-- (.) finalizar RFC de autenticação com a Patrícia (de 2026-03-24)
-- (<) demo do Atlas para stakeholders 2026-04-03 (de 2026-03-27)
+- (.) finalize the auth RFC with Patricia (from 2026-03-24)
+- (<) Atlas demo for stakeholders 2026-04-03 (from 2026-03-27)
 
 ---
-keywords: [atlas, marina, patricia, rafael, data-warehouse, rfc-autenticacao, aws, billing, revisao-trimestral, arquitetura, spike, demo, stakeholders, 1-1, desenvolvimento-de-carreira, kickoff]
+keywords: [atlas, marina, patricia, rafael, data-warehouse, auth-rfc, aws, billing, quarterly-review, architecture, spike, demo, stakeholders, 1-1, career-development, kickoff]
