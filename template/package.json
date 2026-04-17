@@ -1,0 +1,13 @@
+{
+  "name": "{{projectName}}",
+  "version": "0.1.0",
+  "description": "Personal journaling framework built on Claude Code skills.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "detect": "node .claude/skills/consolidate/detect.js"
+  }
+}

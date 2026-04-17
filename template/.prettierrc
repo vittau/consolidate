@@ -1,0 +1,17 @@
+{
+  "printWidth": 120,
+  "proseWrap": "preserve",
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": "*.md",
+      "options": {
+        "printWidth": 120,
+        "proseWrap": "preserve",
+        "embeddedLanguageFormatting": "auto"
+      }
+    }
+  ]
+}

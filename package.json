@@ -1,0 +1,24 @@
+{
+  "name": "create-consolidate",
+  "version": "1.0.0",
+  "description": "Scaffold a personal journaling repo powered by Claude Code skills.",
+  "type": "module",
+  "bin": {
+    "create-consolidate": "bin/index.js"
+  },
+  "files": [
+    "bin",
+    "template"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": "github:vittau/consolidate",
+  "keywords": [
+    "claude-code",
+    "journal",
+    "bullet-journal",
+    "scaffolding"
+  ]
+}
