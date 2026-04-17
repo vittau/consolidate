@@ -10,6 +10,10 @@
     "bin",
     "template"
   ],
+  "scripts": {
+    "prepack": "mv README.md .README.md.bak && mv README.npm.md README.md",
+    "postpack": "mv README.md README.npm.md && mv .README.md.bak README.md"
+  },
   "engines": {
     "node": ">=18"
   },
