@@ -341,6 +341,81 @@ layout: null
             line-height: 1;
         }
 
+        /* Getting Started */
+        .getting-started {
+            padding: 5rem 0 8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .step {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(192, 132, 252, 0.1);
+            color: var(--accent-2);
+            border: 1px solid rgba(192, 132, 252, 0.25);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .step h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #fff;
+        }
+
+        .step p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .step p:last-child {
+            margin-bottom: 0;
+        }
+
+        .step a {
+            color: var(--accent-2);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(192, 132, 252, 0.4);
+            transition: border-color 0.2s;
+        }
+
+        .step a:hover {
+            border-bottom-color: var(--accent-2);
+        }
+
+        .step code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85em;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            color: #e4e4e7;
+        }
+
         @media (max-width: 768px) {
             .install-box {
                 flex-direction: column;
@@ -348,6 +423,9 @@ layout: null
                 width: 100%;
             }
             .example-layout {
+                grid-template-columns: 1fr;
+            }
+            .steps {
                 grid-template-columns: 1fr;
             }
         }
@@ -430,6 +508,39 @@ layout: null
                 </div>
                 <div class="typographic-block">
                     The core philosophy is simple: writing should be instant and freeform. Organizing should be completely delegated to the machine. You write, it remembers.
+                </div>
+            </div>
+        </section>
+
+        <section class="getting-started">
+            <div class="showcase-header animate-up">
+                <h2>Getting started</h2>
+                <p>New to agentic AI? Here's the short version of what you need.</p>
+            </div>
+            <div class="steps">
+                <div class="step animate-up delay-2">
+                    <div class="step-number">1</div>
+                    <h3>Install Claude Code</h3>
+                    <p>Consolidate runs on <a href="https://claude.com/claude-code" target="_blank" rel="noopener">Claude Code</a>, Anthropic's AI assistant for your terminal. It reads your notes, writes summaries, and keeps the journal organized on your behalf.</p>
+                    <p>You'll need an Anthropic account and the Claude Code CLI installed. That's the only piece of AI you have to set up &mdash; everything else is plain files.</p>
+                </div>
+                <div class="step animate-up delay-3">
+                    <div class="step-number">2</div>
+                    <h3>Create your journal</h3>
+                    <p>Run the install command once to scaffold a folder of markdown files. No database, no account to create, nothing proprietary &mdash; just a directory on your computer.</p>
+                    <p>Then open that folder in Claude Code.</p>
+                </div>
+                <div class="step animate-up delay-4">
+                    <div class="step-number">3</div>
+                    <h3>Write and consolidate</h3>
+                    <p>Start your day by running the <code>/new-entry</code> skill &mdash; it creates the markdown file for today so you have somewhere to write.</p>
+                    <p>Jot down tasks, notes, and events using simple bullet notation. Whenever you want, run <code>/consolidate</code> and the agent rolls your entries into weekly and monthly reviews.</p>
+                </div>
+                <div class="step animate-up delay-4">
+                    <div class="step-number">4</div>
+                    <h3>Ask your journal</h3>
+                    <p>Use the querying skills to ask questions in plain English &mdash; when something happened, what you focused on last month, how a project evolved.</p>
+                    <p>The agent searches your notes and synthesizes an answer across months of context.</p>
                 </div>
             </div>
         </section>
