@@ -1,4 +1,4 @@
-# create-consolidate
+# consolidate ⚡️
 
 Scaffold de um repositório de journaling pessoal alimentado por skills do [Claude Code](https://docs.claude.com/en/docs/claude-code). Veja o [template/README.md](template/README.md) para a visão geral do framework que o scaffold gera.
 
@@ -34,12 +34,12 @@ Se você omitir o nome do diretório, o CLI pergunta interativamente.
 
 Depois de scaffoldado, o repositório expõe quatro skills do Claude Code:
 
-| Skill | O que faz |
-|---|---|
-| `/new-entry` | Cria o arquivo diário de hoje (depois de consolidar pendências). |
-| `/consolidate` | Indexa entradas diárias, resume semanas ISO e meses completos. |
-| `/when <consulta>` | Encontra quando um tópico aparece no journal. |
-| `/explain <assunto>` | Sintetiza o que o journal diz sobre um assunto. |
+| Skill                | O que faz                                                        |
+| -------------------- | ---------------------------------------------------------------- |
+| `/new-entry`         | Cria o arquivo diário de hoje (depois de consolidar pendências). |
+| `/consolidate`       | Indexa entradas diárias, resume semanas ISO e meses completos.   |
+| `/when <consulta>`   | Encontra quando um tópico aparece no journal.                    |
+| `/explain <assunto>` | Sintetiza o que o journal diz sobre um assunto.                  |
 
 Leia o [template/README.md](template/README.md) para convenções, notação Bullet Journal e estrutura de diretórios.
 

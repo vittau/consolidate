@@ -103,6 +103,7 @@ async function main() {
   console.log("");
   console.log("Próximos passos:");
   console.log(`  cd ${target}`);
+  console.log("  # edite ABOUT.md para contar ao Claude quem é você");
   console.log("  claude   # abrir o Claude Code");
   console.log("  /new-entry");
   console.log("");

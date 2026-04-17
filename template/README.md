@@ -73,6 +73,10 @@ Arquivos semanais e mensais usam o mesmo bloco, colocado depois de um resumo nar
 - `/consolidate` processa apenas o que está faltando. Nunca edita o conteúdo escrito pelo usuário em uma entrada diária — apenas adiciona o bloco de palavras-chave.
 - A busca por palavras-chave (em `/when` e `/explain`) compara com os blocos de palavras-chave armazenados; os sinônimos são resolvidos pelo modelo, sem dicionário externo.
 
+## Antes de começar
+
+Edite [ABOUT.md](ABOUT.md) com uma descrição sucinta sobre você — o arquivo é carregado automaticamente em toda sessão do Claude e dá contexto para as skills interpretarem melhor suas entradas.
+
 ## Dia típico
 
 1. `/new-entry` — `/consolidate` roda primeiro para processar qualquer indexação pendente; em seguida o arquivo de hoje é criado ou mostrado.

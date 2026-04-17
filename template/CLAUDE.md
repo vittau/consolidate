@@ -2,6 +2,10 @@
 
 Repositório pessoal de journaling. Veja [README.md](README.md) para a visão geral do framework voltada ao usuário. Este arquivo é o contexto de trabalho para o Claude Code.
 
+## Perfil do usuário
+
+@ABOUT.md
+
 ## Grafo de skills
 
 - `new-entry` → invoca `consolidate` primeiro e depois cria o arquivo diário de hoje.
